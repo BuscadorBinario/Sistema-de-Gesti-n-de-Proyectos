@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Proyectos - Sector Público Perú</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .mode-selector {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.8s ease;
+            text-align: center;
+        }
+
+        .mode-selector h2 {
+            color: #c31432;
+            margin-bottom: 20px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 20px 40px;
+            border: 3px solid #c31432;
+            border-radius: 15px;
+            background: white;
+            color: #c31432;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+        }
+
+        .mode-btn:hover {
+            background: #c31432;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 20, 50, 0.3);
+        }
+
+        .mode-btn.active {
+            background: #c31432;
+            color: white;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .card h2 {
+            color: #c31432;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #c31432;
+            padding-bottom: 10px;
+        }
+
+        .sector-selector {
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #c31432;
+        }
+
+        .sector-selector h3 {
+            color: #c31432;
+            margin-bottom: 15px;
+        }
+
+        .sector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .sector-option {
+            padding: 15px;
+            border: 2px solid #c31432;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .sector-option:hover {
+            background: #c31432;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sector-option.selected {
+            background: #c31432;
+            color: white;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        input, textarea, select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #c31432;
+            box-shadow: 0 0 0 3px rgba(195, 20, 50, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .task-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .task-section h3 {
+            color: #240b36;
+            margin-bottom: 15px;
+        }
+
+        .task-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c31432;
+            animation: slideIn 0.5s ease;
+        }
+
+        .task-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(195, 20, 50, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(56, 239, 125, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            padding: 8px 15px;
+        }
+
+        .btn-danger:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .gantt-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .gantt-chart {
+            min-width: 800px;
+        }
+
+        .gantt-header {
+            display: flex;
+            border-bottom: 2px solid #c31432;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .gantt-task-name {
+            width: 200px;
+            padding: 10px;
+        }
+
+        .gantt-timeline {
+            flex: 1;
+            position: relative;
+            min-height: 40px;
+        }
+
+        .gantt-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 30px;
+            background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(195, 20, 50, 0.3);
+            animation: expandBar 1s ease;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .gantt-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(195, 20, 50, 0.5);
+        }
+
+        .gantt-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .gantt-dates {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .acta-preview {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .acta-preview h3 {
+            color: #c31432;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .acta-preview p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .acta-preview .header-oficial {
+            text-align: center;
+            border-bottom: 3px solid #c31432;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .acta-preview .escudo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #c31432;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes expandBar {
+            from {
+                width: 0;
+            }
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #c31432, #240b36);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .mode-selector, .btn-container, .card h2, .task-section {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-indicator" id="progressBar"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Sistema de Gestión de Proyectos</h1>
+            <p class="subtitle">Sector Público - República del Perú</p>
+        </div>
+
+        <div class="mode-selector">
+            <h2>Selecciona el Modo de Creación</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="selectMode('auto')">
+                    🤖 Generación Automática<br>
+                    <small>El sistema crea un proyecto completo</small>
+                </button>
+                <button class="mode-btn" onclick="selectMode('manual')">
+                    ✍️ Creación Manual<br>
+                    <small>Completa los campos tú mismo</small>
+                </button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="sectorCard">
+            <h2>🏢 Selecciona el Sector Público</h2>
+            <div class="sector-selector">
+                <h3>Sectores del Estado Peruano</h3>
+                <div class="sector-grid" id="sectorGrid"></div>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="generateAutoProject()">Generar Proyecto Automático</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="formCard">
+            <h2>📋 Acta de Constitución del Proyecto</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre del Proyecto *</label>
+                    <input type="text" id="projectName" placeholder="Ej: Mejoramiento del Sistema de Salud">
+                </div>
+                
+                <div class="form-group">
+                    <label>Código SNIP/Invierte.pe *</label>
+                    <input type="text" id="projectCode" placeholder="Ej: 2024-001-MINSA">
+                </div>
+                
+                <div class="form-group">
+                    <label>Unidad Ejecutora *</label>
+                    <input type="text" id="executingUnit" placeholder="Ej: Ministerio de Salud">
+                </div>
+                
+                <div class="form-group">
+                    <label>Sector</label>
+                    <input type="text" id="sector" placeholder="Ej: Salud" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>Fecha de Inicio *</label>
+                    <input type="date" id="startDate">
+                </div>
+                
+                <div class="form-group">
+                    <label>Fecha de Fin *</label>
+                    <input type="date" id="endDate">
+                </div>
+                
+                <div class="form-group">
+                    <label>Funcionario Responsable *</label>
+                    <input type="text" id="sponsor" placeholder="Nombre del funcionario">
+                </div>
+                
+                <div class="form-group">
+                    <label>Director del Proyecto *</label>
+                    <input type="text" id="projectManager" placeholder="Nombre del director">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción del Proyecto *</label>
+                <textarea id="description" placeholder="Describe el propósito y alcance del proyecto público..."></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Objetivos Estratégicos</label>
+                    <textarea id="objectives" placeholder="Objetivos alineados al Plan Nacional..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Marco Legal</label>
+                    <textarea id="legalFramework" placeholder="Leyes, decretos y normativas aplicables..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Entregables Principales</label>
+                    <textarea id="deliverables" placeholder="Lista los entregables según términos de referencia..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Beneficiarios</label>
+                    <textarea id="beneficiaries" placeholder="Población objetivo del proyecto..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Presupuesto (S/)</label>
+                    <input type="text" id="budget" placeholder="Ej: S/ 1,500,000">
+                </div>
+                
+                <div class="form-group">
+                    <label>Fuente de Financiamiento</label>
+                    <select id="funding">
+                        <option value="">Seleccionar...</option>
+                        <option value="Recursos Ordinarios">Recursos Ordinarios</option>
+                        <option value="Recursos Directamente Recaudados">Recursos Directamente Recaudados</option>
+                        <option value="Recursos Determinados">Recursos Determinados</option>
+                        <option value="Donaciones y Transferencias">Donaciones y Transferencias</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Región</label>
+                    <input type="text" id="region" placeholder="Ej: Lima, Cusco, Arequipa">
+                </div>
+                
+                <div class="form-group">
+                    <label>Stakeholders</label>
+                    <input type="text" id="stakeholders" placeholder="Entidades y personas involucradas">
+                </div>
+            </div>
+
+            <div class="task-section">
+                <h3>📅 Cronograma de Actividades</h3>
+                <div id="tasksContainer"></div>
+                <button class="btn btn-success" onclick="addTask()">+ Agregar Actividad</button>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="generateCharter()">Generar Acta y Diagrama de Gantt</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="resultsCard">
+            <h2>📄 Acta de Constitución del Proyecto</h2>
+            <div class="acta-preview" id="actaPreview"></div>
+            
+            <h2 style="margin-top: 40px;">📊 Diagrama de Gantt</h2>
+            <div class="gantt-container">
+                <div class="gantt-chart" id="ganttChart"></div>
+            </div>
+            
+            <div class="btn-container">
+                <button class="btn btn-primary" onclick="printCharter()">🖨️ Imprimir Acta</button>
+                <button class="btn btn-success" onclick="downloadCharter()">💾 Descargar PDF</button>
+                <button class="btn btn-danger" onclick="resetSystem()">🔄 Nuevo Proyecto</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        let taskCounter = 0;
+        let currentMode = null;
+        let selectedSector = null;
+
+        const sectores = [
+            'Salud',
+            'Educación',
+            'Transportes y Comunicaciones',
+            'Agricultura',
+            'Economía y Finanzas',
+            'Interior',
+            'Justicia',
+            'Defensa',
+            'Vivienda y Construcción',
+            'Energía y Minas',
+            'Trabajo y Promoción del Empleo',
+            'Desarrollo e Inclusión Social',
+            'Ambiente',
+            'Cultura',
+            'Comercio Exterior y Turismo'
+        ];
+
+        const proyectosTemplate = {
+            'Salud': {
+                nombre: 'Mejoramiento de Servicios de Salud Materno Infantil',
+                descripcion: 'Proyecto orientado a mejorar la calidad de atención en salud materno infantil mediante la implementación de equipamiento médico, capacitación del personal sanitario y fortalecimiento de las capacidades operativas de los establecimientos de salud del primer nivel de atención.',
+                objetivos: '1. Reducir la tasa de mortalidad materna en un 30%\n2. Mejorar la cobertura de atención prenatal al 95%\n3. Fortalecer las capacidades del personal de salud\n4. Implementar sistemas de información en salud',
+                entregables: '1. 20 establecimientos de salud equipados\n2. 150 profesionales capacitados\n3. Sistema de monitoreo implementado\n4. Protocolos de atención actualizados',
+                beneficiarios: 'Población de mujeres gestantes y niños menores de 5 años de las zonas rurales y urbano-marginales, estimada en 50,000 beneficiarios directos.',
+                marcoLegal: 'Ley N° 26842 - Ley General de Salud\nLey N° 27657 - Ley del Ministerio de Salud\nD.S. N° 013-2006-SA - Reglamento de Establecimientos de Salud',
+                presupuesto: 'S/ 3,500,000',
+                tareas: [
+                    { nombre: 'Elaboración de Expediente Técnico', dias: 30 },
+                    { nombre: 'Proceso de Licitación', dias: 45 },
+                    { nombre: 'Adquisición de Equipamiento', dias: 60 },
+                    { nombre: 'Capacitación de Personal', dias: 40 },
+                    { nombre: 'Implementación de Sistemas', dias: 50 },
+                    { nombre: 'Supervisión y Monitoreo', dias: 90 }
+                ]
+            },
+            'Educación': {
+                nombre: 'Mejoramiento de Infraestructura Educativa Rural',
+                descripcion: 'Proyecto de inversión pública para mejorar las condiciones de infraestructura educativa en zonas rurales, incluyendo construcción y rehabilitación de aulas, implementación de laboratorios, bibliotecas y espacios deportivos, alineado con los estándares del Ministerio de Educación.',
+                objetivos: '1. Mejorar las condiciones de aprendizaje de 5,000 estudiantes\n2. Reducir la brecha de infraestructura educativa rural\n3. Implementar espacios pedagógicos modernos\n4. Cumplir con estándares de seguridad y accesibilidad',
+                entregables: '1. 15 instituciones educativas mejoradas\n2. 60 aulas construidas/rehabilitadas\n3. 15 laboratorios implementados\n4. Mobiliario y equipamiento educativo',
+                beneficiarios: 'Estudiantes de educación básica regular en zonas rurales de extrema pobreza, aproximadamente 5,000 beneficiarios directos y 20,000 indirectos.',
+                marcoLegal: 'Ley N° 28044 - Ley General de Educación\nLey N° 29944 - Ley de Reforma Magisterial\nR.M. N° 252-2011-ED - Normas técnicas para el diseño de locales escolares',
+                presupuesto: 'S/ 8,500,000',
+                tareas: [
+                    { nombre: 'Estudios Definitivos', dias: 45 },
+                    { nombre: 'Elaboración de Expediente', dias: 30 },
+                    { nombre: 'Proceso de Selección', dias: 40 },
+                    { nombre: 'Construcción de Infraestructura', dias: 180 },
+                    { nombre: 'Equipamiento', dias: 60 },
+                    { nombre: 'Supervisión de Obra', dias: 180 }
+                ]
+            },
+            'Transportes y Comunicaciones': {
+                nombre: 'Rehabilitación de Carretera Departamental',
+                descripcion: 'Proyecto de rehabilitación y mejoramiento de 35 km de carretera departamental para mejorar la conectividad vial, reducir tiempos de viaje y costos de transporte, facilitando el acceso a servicios básicos y mercados para la población rural.',
+                objetivos: '1. Mejorar la transitabilidad vehicular\n2. Reducir tiempos de viaje en 40%\n3. Integrar zonas productivas con mercados\n4. Generar empleo temporal local',
+                entregables: '1. 35 km de carretera rehabilitada\n2. Obras de arte (puentes, alcantarillas)\n3. Señalización vial implementada\n4. Plan de mantenimiento vial',
+                beneficiarios: 'Población de 8 centros poblados rurales, estimada en 15,000 habitantes que mejorarán su acceso a servicios y comercialización de productos.',
+                marcoLegal: 'Ley N° 27181 - Ley General de Transporte y Tránsito Terrestre\nLey N° 29370 - Ley de Organización y Funciones del MTC\nD.S. N° 034-2008-MTC - Reglamento Nacional de Gestión de Infraestructura Vial',
+                presupuesto: 'S/ 12,000,000',
+                tareas: [
+                    { nombre: 'Estudios de Ingeniería', dias: 60 },
+                    { nombre: 'Liberación de Derecho de Vía', dias: 30 },
+                    { nombre: 'Licitación Pública', dias: 50 },
+                    { nombre: 'Obras Preliminares', dias: 30 },
+                    { nombre: 'Rehabilitación de Calzada', dias: 240 },
+                    { nombre: 'Señalización', dias: 20 }
+                ]
+            },
+            'Agricultura': {
+                nombre: 'Tecnificación del Sistema de Riego',
+                descripcion: 'Proyecto de inversión para tecnificar el sistema de riego mediante la implementación de riego por goteo y aspersión, mejorando la eficiencia en el uso del agua y aumentando la productividad agrícola de pequeños y medianos productores.',
+                objetivos: '1. Incrementar eficiencia hídrica al 80%\n2. Aumentar productividad agrícola en 50%\n3. Incorporar 500 hectáreas al riego tecnificado\n4. Fortalecer organizaciones de usuarios',
+                entregables: '1. Sistema de riego tecnificado\n2. 500 hectáreas implementadas\n3. Capacitación a 300 agricultores\n4. Plan de operación y mantenimiento',
+                beneficiarios: 'Pequeños y medianos agricultores organizados en comités de riego, aproximadamente 300 familias beneficiarias directas.',
+                marcoLegal: 'Ley N° 29338 - Ley de Recursos Hídricos\nLey N° 30355 - Ley de Promoción y Desarrollo de la Agricultura Familiar\nD.S. N° 001-2010-AG - Reglamento de la Ley de Recursos Hídricos',
+                presupuesto: 'S/ 4,200,000',
+                tareas: [
+                    { nombre: 'Estudio Hidrológico', dias: 40 },
+                    { nombre: 'Diseño del Sistema', dias: 30 },
+                    { nombre: 'Adquisición de Equipos', dias: 45 },
+                    { nombre: 'Instalación de Sistema', dias: 90 },
+                    { nombre: 'Capacitación de Usuarios', dias: 30 },
+                    { nombre: 'Puesta en Operación', dias: 45 }
+                ]
+            },
+            'Desarrollo e Inclusión Social': {
+                nombre: 'Implementación de Centro de Desarrollo Infantil Temprano',
+                descripcion: 'Proyecto para implementar un Centro de Desarrollo Infantil Temprano (CDIT) que brinde servicios integrales de cuidado, aprendizaje y nutrición a niños menores de 3 años en situación de vulnerabilidad, promoviendo su desarrollo integral.',
+                objetivos: '1. Atender a 200 niños menores de 3 años\n2. Reducir desnutrición crónica infantil\n3. Fortalecer competencias parentales\n4. Promover desarrollo cognitivo y socioemocional',
+                entregables: '1. Centro de Desarrollo implementado\n2. Personal capacitado\n3. Programa de estimulación temprana\n4. Servicios de nutrición y salud',
+                beneficiarios: 'Niños menores de 3 años y sus familias en situación de pobreza y pobreza extrema, aproximadamente 200 niños y 400 padres de familia.',
+                marcoLegal: 'Ley N° 29792 - Ley de Creación del MIDIS\nD.S. N° 003-2012-MIDIS - Reglamento de Organización del MIDIS\nDirectiva sectorial para servicios de cuidado diurno',
+                presupuesto: 'S/ 2,800,000',
+                tareas: [
+                    { nombre: 'Acondicionamiento de Local', dias: 60 },
+                    { nombre: 'Equipamiento del Centro', dias: 30 },
+                    { nombre: 'Selección de Personal', dias: 40 },
+                    { nombre: 'Capacitación del Personal', dias: 35 },
+                    { nombre: 'Articulación Intersectorial', dias: 30 },
+                    { nombre: 'Inicio de Operaciones', dias: 15 }
+                ]
+            },
+            'Vivienda y Construcción': {
+                nombre: 'Mejoramiento del Sistema de Agua Potable y Saneamiento',
+                descripcion: 'Proyecto de inversión pública orientado a mejorar el servicio de agua potable y saneamiento básico mediante la ampliación de redes, instalación de conexiones domiciliarias y construcción de planta de tratamiento de aguas residuales.',
+                objetivos: '1. Ampliar cobertura de agua potable al 95%\n2. Mejorar calidad del servicio 24/7\n3. Implementar sistema de tratamiento de aguas\n4. Reducir enfermedades de origen hídrico',
+                entregables: '1. Ampliación de red de agua potable\n2. 800 conexiones domiciliarias\n3. Planta de tratamiento de aguas\n4. Fortalecimiento institucional de JASS',
+                beneficiarios: 'Población urbana y rural de 5 centros poblados, aproximadamente 4,000 habitantes con acceso a servicios mejorados.',
+                marcoLegal: 'Ley N° 26338 - Ley de Servicios de Saneamiento\nD.S. N° 023-2005-VIVIENDA - Reglamento de Prestación de Servicios\nLey N° 30045 - Ley de Modernización de la Gestión del Agua',
+                presupuesto: 'S/ 6,500,000',
+                tareas: [
+                    { nombre: 'Estudio Topográfico', dias: 30 },
+                    { nombre: 'Diseño de Redes', dias: 40 },
+                    { nombre: 'Construcción de Captación', dias: 60 },
+                    { nombre: 'Tendido de Redes', dias: 120 },
+                    { nombre: 'Instalación de Conexiones', dias: 90 },
+                    { nombre: 'Planta de Tratamiento', dias: 150 }
+                ]
+            },
+            'Ambiente': {
+                nombre: 'Recuperación de Áreas Degradadas y Reforestación',
+                descripcion: 'Proyecto ambiental para la recuperación de áreas degradadas mediante acciones de reforestación, conservación de suelos y gestión sostenible de recursos naturales, contribuyendo a la mitigación del cambio climático.',
+                objetivos: '1. Recuperar 1,000 hectáreas degradadas\n2. Plantar 500,000 plantones nativos\n3. Generar servicios ecosistémicos\n4. Involucrar a comunidades locales',
+                entregables: '1. 1,000 hectáreas reforestadas\n2. Vivero forestal implementado\n3. Plan de manejo forestal\n4. Programa de vigilancia comunitaria',
+                beneficiarios: 'Comunidades campesinas y población aledaña a zonas de intervención, aproximadamente 2,000 familias beneficiadas.',
+                marcoLegal: 'Ley N° 28611 - Ley General del Ambiente\nLey N° 29763 - Ley Forestal y de Fauna Silvestre\nD.S. N° 019-2017-MINAM - Reglamento de Gestión Forestal',
+                presupuesto: 'S/ 3,200,000',
+                tareas: [
+                    { nombre: 'Diagnóstico Ambiental', dias: 30 },
+                    { nombre: 'Implementación de Vivero', dias: 60 },
+                    { nombre: 'Producción de Plantones', dias: 120 },
+                    { nombre: 'Reforestación', dias: 180 },
+                    { nombre: 'Mantenimiento', dias: 365 },
+                    { nombre: 'Monitoreo', dias: 365 }
+                ]
+            }
+        };
+
+        // Inicializar sectores
+        function initializeSectors() {
+            const grid = document.getElementById('sectorGrid');
+            sectores.forEach(sector => {
+                const option = document.createElement('div');
+                option.className = 'sector-option';
+                option.textContent = sector;
+                option.onclick = () => selectSector(sector);
+                grid.appendChild(option);
+            });
+        }
+
+        function selectSector(sector) {
+            selectedSector = sector;
+            document.querySelectorAll('.sector-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (mode === 'auto') {
+                document.getElementById('sectorCard').classList.remove('hidden');
+                document.getElementById('formCard').classList.add('hidden');
+                document.getElementById('resultsCard').classList.add('hidden');
+            } else {
+                document.getElementById('sectorCard').classList.add('hidden');
+                document.getElementById('formCard').classList.remove('hidden');
+                document.getElementById('resultsCard').classList.add('hidden');
+                addTask(); // Agregar una tarea inicial
+            }
+        }
+
+        function generateAutoProject() {
+            if (!selectedSector) {
+                alert('Por favor selecciona un sector');
+                return;
+            }
+
+            const template = proyectosTemplate[selectedSector];
+            if (!template) {
+                alert('No hay plantilla disponible para este sector');
+                return;
+            }
+
+            // Mostrar loading
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.textContent = 'Generando proyecto automático';
+            document.getElementById('sectorCard').appendChild(loadingDiv);
+
+            // Simular proceso de generación
+            setTimeout(() => {
+                // Calcular fechas
+                const today = new Date();
+                const startDate = new Date(today);
+                startDate.setDate(startDate.getDate() + 30); // Inicio en 30 días
+                
+                let totalDias = template.tareas.reduce((sum, t) => sum + t.dias, 0);
+                const endDate = new Date(startDate);
+                endDate.setDate(endDate.getDate() + totalDias);
+
+                // Llenar todos los campos
+                document.getElementById('projectName').value = template.nombre;
+                document.getElementById('projectCode').value = `${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}-${selectedSector.substring(0, 4).toUpperCase()}`;
+                document.getElementById('executingUnit').value = `Ministerio de ${selectedSector}`;
+                document.getElementById('sector').value = selectedSector;
+                document.getElementById('startDate').value = formatDateInput(startDate);
+                document.getElementById('endDate').value = formatDateInput(endDate);
+                document.getElementById('sponsor').value = generarNombreFuncionario();
+                document.getElementById('projectManager').value = generarNombreFuncionario();
+                document.getElementById('description').value = template.descripcion;
+                document.getElementById('objectives').value = template.objetivos;
+                document.getElementById('legalFramework').value = template.marcoLegal;
+                document.getElementById('deliverables').value = template.entregables;
+                document.getElementById('beneficiaries').value = template.beneficiarios;
+                document.getElementById('budget').value = template.presupuesto;
+                document.getElementById('funding').value = 'Recursos Ordinarios';
+                document.getElementById('region').value = generarRegion();
+                document.getElementById('stakeholders').value = generarStakeholders(selectedSector);
+
+                // Limpiar tareas existentes
+                document.getElementById('tasksContainer').innerHTML = '';
+                tasks = [];
+                taskCounter = 0;
+
+                // Agregar tareas del template
+                let currentDate = new Date(startDate);
+                template.tareas.forEach(tarea => {
+                    const taskStartDate = new Date(currentDate);
+                    const taskEndDate = new Date(currentDate);
+                    taskEndDate.setDate(taskEndDate.getDate() + tarea.dias);
+                    
+                    addTaskWithData(tarea.nombre, formatDateInput(taskStartDate), formatDateInput(taskEndDate));
+                    
+                    currentDate = new Date(taskEndDate);
+                    currentDate.setDate(currentDate.getDate() + 1);
+                });
+
+                // Remover loading y cambiar a vista de formulario
+                loadingDiv.remove();
+                document.getElementById('sectorCard').classList.add('hidden');
+                document.getElementById('formCard').classList.remove('hidden');
+                
+                // Scroll suave al formulario
+                document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+                
+                // Generar automáticamente el acta
+                setTimeout(() => {
+                    generateCharter();
+                }, 1000);
+            }, 2000);
+        }
+
+        function generarNombreFuncionario() {
+            const nombres = ['Carlos', 'María', 'José', 'Ana', 'Luis', 'Patricia', 'Jorge', 'Rosa'];
+            const apellidos = ['García', 'Rodríguez', 'López', 'Martínez', 'Pérez', 'Gonzales', 'Sánchez', 'Torres'];
+            return `${nombres[Math.floor(Math.random() * nombres.length)]} ${apellidos[Math.floor(Math.random() * apellidos.length)]} ${apellidos[Math.floor(Math.random() * apellidos.length)]}`;
+        }
+
+        function generarRegion() {
+            const regiones = ['Lima', 'Cusco', 'Arequipa', 'La Libertad', 'Piura', 'Lambayeque', 'Junín', 'Puno', 'Cajamarca', 'Loreto'];
+            return regiones[Math.floor(Math.random() * regiones.length)];
+        }
+
+        function generarStakeholders(sector) {
+            const base = `Ministerio de ${sector}, Gobierno Regional, Gobiernos Locales, `;
+            const adicionales = {
+                'Salud': 'EsSalud, Colegio Médico, ONGs de salud',
+                'Educación': 'UGEL, Directores de IE, APAFA, SUTEP',
+                'Transportes y Comunicaciones': 'Provías, Municipalidades, Juntas Vecinales',
+                'Agricultura': 'SENASA, Comisiones de Regantes, Cooperativas Agrarias',
+                'Desarrollo e Inclusión Social': 'INABIF, Municipalidades, Organizaciones Sociales',
+                'Vivienda y Construcción': 'SUNASS, JASS, Municipalidades',
+                'Ambiente': 'SERFOR, OEFA, Comunidades Campesinas, ONGs ambientales'
+            };
+            return base + (adicionales[sector] || 'Entidades locales y sociedad civil');
+        }
+
+        function formatDateInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function addTaskWithData(name, start, end) {
+            taskCounter++;
+            const taskId = `task-${taskCounter}`;
+            
+            const taskHTML = `
+                <div class="task-item" id="${taskId}">
+                    <div class="task-inputs">
+                        <div class="form-group">
+                            <label>Nombre de la Actividad</label>
+                            <input type="text" value="${name}" data-task="${taskId}" data-field="name">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Inicio</label>
+                            <input type="date" value="${start}" data-task="${taskId}" data-field="start">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Fin</label>
+                            <input type="date" value="${end}" data-task="${taskId}" data-field="end">
+                        </div>
+                        <div class="form-group">
+                            <label>Duración (días)</label>
+                            <input type="number" data-task="${taskId}" data-field="duration" readonly>
+                        </div>
+                        <button class="btn btn-danger" onclick="removeTask('${taskId}')">✕</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tasksContainer').insertAdjacentHTML('beforeend', taskHTML);
+            
+            const taskDiv = document.getElementById(taskId);
+            const startInput = taskDiv.querySelector('[data-field="start"]');
+            const endInput = taskDiv.querySelector('[data-field="end"]');
+            const durationInput = taskDiv.querySelector('[data-field="duration"]');
+            
+            calculateDuration(startInput, endInput, durationInput);
+            
+            startInput.addEventListener('change', () => calculateDuration(startInput, endInput, durationInput));
+            endInput.addEventListener('change', () => calculateDuration(startInput, endInput, durationInput));
+            
+            updateProgress();
+        }
+
+        function addTask() {
+            taskCounter++;
+            const taskId = `task-${taskCounter}`;
+            
+            const taskHTML = `
+                <div class="task-item" id="${taskId}">
+                    <div class="task-inputs">
+                        <div class="form-group">
+                            <label>Nombre de la Actividad</label>
+                            <input type="text" placeholder="Ej: Elaboración de expediente técnico" data-task="${taskId}" data-field="name">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Inicio</label>
+                            <input type="date" data-task="${taskId}" data-field="start">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Fin</label>
+                            <input type="date" data-task="${taskId}" data-field="end">
+                        </div>
+                        <div class="form-group">
+                            <label>Duración (días)</label>
+                            <input type="number" placeholder="Días" data-task="${taskId}" data-field="duration" readonly>
+                        </div>
+                        <button class="btn btn-danger" onclick="removeTask('${taskId}')">✕</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tasksContainer').insertAdjacentHTML('beforeend', taskHTML);
+            
+            const taskDiv = document.getElementById(taskId);
+            const startInput = taskDiv.querySelector('[data-field="start"]');
+            const endInput = taskDiv.querySelector('[data-field="end"]');
+            const durationInput = taskDiv.querySelector('[data-field="duration"]');
+            
+            startInput.addEventListener('change', () => calculateDuration(startInput, endInput, durationInput));
+            endInput.addEventListener('change', () => calculateDuration(startInput, endInput, durationInput));
+            
+            updateProgress();
+        }
+
+        function calculateDuration(startInput, endInput, durationInput) {
+            if (startInput.value && endInput.value) {
+                const start = new Date(startInput.value);
+                const end = new Date(endInput.value);
+                const diffTime = Math.abs(end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                durationInput.value = diffDays;
+            }
+        }
+
+        function removeTask(taskId) {
+            const taskElement = document.getElementById(taskId);
+            taskElement.style.animation = 'fadeOut 0.5s ease';
+            setTimeout(() => {
+                taskElement.remove();
+                updateProgress();
+            }, 500);
+        }
+
+        function updateProgress() {
+            const inputs = document.querySelectorAll('input:not([readonly]), textarea, select');
+            let filled = 0;
+            inputs.forEach(input => {
+                if (input.value) filled++;
+            });
+            const progress = (filled / inputs.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        document.addEventListener('input', updateProgress);
+
+        function generateCharter() {
+            const projectData = {
+                name: document.getElementById('projectName').value,
+                code: document.getElementById('projectCode').value,
+                executingUnit: document.getElementById('executingUnit').value,
+                sector: document.getElementById('sector').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                sponsor: document.getElementById('sponsor').value,
+                projectManager: document.getElementById('projectManager').value,
+                description: document.getElementById('description').value,
+                objectives: document.getElementById('objectives').value,
+                legalFramework: document.getElementById('legalFramework').value,
+                deliverables: document.getElementById('deliverables').value,
+                beneficiaries: document.getElementById('beneficiaries').value,
+                budget: document.getElementById('budget').value,
+                funding: document.getElementById('funding').value,
+                region: document.getElementById('region').value,
+                stakeholders: document.getElementById('stakeholders').value
+            };
+
+            if (!projectData.name || !projectData.startDate || !projectData.endDate) {
+                alert('Por favor completa los campos obligatorios (marcados con *)');
+                return;
+            }
+
+            tasks = [];
+            const taskElements = document.querySelectorAll('.task-item');
+            taskElements.forEach(taskEl => {
+                const name = taskEl.querySelector('[data-field="name"]').value;
+                const start = taskEl.querySelector('[data-field="start"]').value;
+                const end = taskEl.querySelector('[data-field="end"]').value;
+                
+                if (name && start && end) {
+                    tasks.push({ name, start, end });
+                }
+            });
+
+            generateActaPreview(projectData);
+            generateGanttChart(projectData, tasks);
+            
+            const resultsCard = document.getElementById('resultsCard');
+            resultsCard.classList.remove('hidden');
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function generateActaPreview(data) {
+            const actaHTML = `
+                <div class="header-oficial">
+                    <div class="escudo">🇵🇪</div>
+                    <h3>REPÚBLICA DEL PERÚ</h3>
+                    <h3>${data.executingUnit || 'ENTIDAD PÚBLICA'}</h3>
+                    <h3 style="margin-top: 20px;">ACTA DE CONSTITUCIÓN DEL PROYECTO</h3>
+                </div>
+                
+                <h3>1. INFORMACIÓN GENERAL DEL PROYECTO</h3>
+                <p><strong>Nombre del Proyecto:</strong> ${data.name}</p>
+                <p><strong>Código SNIP/Invierte.pe:</strong> ${data.code}</p>
+                <p><strong>Unidad Ejecutora:</strong> ${data.executingUnit}</p>
+                <p><strong>Sector:</strong> ${data.sector}</p>
+                <p><strong>Región:</strong> ${data.region || 'No especificado'}</p>
+                <p><strong>Fecha de Inicio:</strong> ${formatDate(data.startDate)}</p>
+                <p><strong>Fecha de Finalización:</strong> ${formatDate(data.endDate)}</p>
+                
+                <h3>2. RESPONSABLES DEL PROYECTO</h3>
+                <p><strong>Funcionario Responsable:</strong> ${data.sponsor}</p>
+                <p><strong>Director del Proyecto:</strong> ${data.projectManager}</p>
+                
+                <h3>3. DESCRIPCIÓN DEL PROYECTO</h3>
+                <p>${data.description}</p>
+                
+                <h3>4. OBJETIVOS ESTRATÉGICOS</h3>
+                <p style="white-space: pre-line;">${data.objectives || 'No especificado'}</p>
+                
+                <h3>5. MARCO LEGAL Y NORMATIVO</h3>
+                <p style="white-space: pre-line;">${data.legalFramework || 'No especificado'}</p>
+                
+                <h3>6. ENTREGABLES PRINCIPALES</h3>
+                <p style="white-space: pre-line;">${data.deliverables || 'No especificado'}</p>
+                
+                <h3>7. BENEFICIARIOS</h3>
+                <p>${data.beneficiaries || 'No especificado'}</p>
+                
+                <h3>8. PRESUPUESTO Y FINANCIAMIENTO</h3>
+                <p><strong>Presupuesto Total:</strong> ${data.budget || 'No especificado'}</p>
+                <p><strong>Fuente de Financiamiento:</strong> ${data.funding || 'No especificado'}</p>
+                
+                <h3>9. STAKEHOLDERS Y ACTORES INVOLUCRADOS</h3>
+                <p>${data.stakeholders || 'No especificado'}</p>
+                
+                <h3>10. CRONOGRAMA</h3>
+                <p><strong>Total de Actividades:</strong> ${tasks.length}</p>
+                <p><strong>Duración Total:</strong> ${calculateProjectDuration(data.startDate, data.endDate)} días</p>
+                
+                <div style="margin-top: 40px; text-align: center;">
+                    <p>___________________________</p>
+                    <p><strong>${data.sponsor}</strong></p>
+                    <p>Funcionario Responsable</p>
+                    <br>
+                    <p>___________________________</p>
+                    <p><strong>${data.projectManager}</strong></p>
+                    <p>Director del Proyecto</p>
+                </div>
+            `;
+            
+            document.getElementById('actaPreview').innerHTML = actaHTML;
+        }
+
+        function calculateProjectDuration(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = Math.abs(end - start);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function generateGanttChart(projectData, tasks) {
+            if (tasks.length === 0) {
+                document.getElementById('ganttChart').innerHTML = '<p style="text-align: center; padding: 20px;">No hay actividades para mostrar en el diagrama de Gantt.</p>';
+                return;
+            }
+
+            const projectStart = new Date(projectData.startDate);
+            const projectEnd = new Date(projectData.endDate);
+            const totalDays = Math.ceil((projectEnd - projectStart) / (1000 * 60 * 60 * 24));
+
+            let ganttHTML = `
+                <div class="gantt-header">
+                    <div class="gantt-task-name">Actividad</div>
+                    <div class="gantt-timeline">Línea de Tiempo</div>
+                </div>
+            `;
+
+            tasks.forEach((task, index) => {
+                const taskStart = new Date(task.start);
+                const taskEnd = new Date(task.end);
+                const startOffset = Math.ceil((taskStart - projectStart) / (1000 * 60 * 60 * 24));
+                const duration = Math.ceil((taskEnd - taskStart) / (1000 * 60 * 60 * 24));
+                
+                const leftPercent = (startOffset / totalDays) * 100;
+                const widthPercent = (duration / totalDays) * 100;
+                
+                const colors = [
+                    'linear-gradient(135deg, #c31432 0%, #240b36 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                    'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+                ];
+                
+                ganttHTML += `
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">${task.name}</div>
+                        <div class="gantt-timeline">
+                            <div class="gantt-bar" style="left: ${leftPercent}%; width: ${widthPercent}%; background: ${colors[index % colors.length]}; animation-delay: ${index * 0.1}s;">
+                                ${duration} días
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            ganttHTML += `
+                <div class="gantt-dates">
+                    <span><strong>Inicio:</strong> ${formatDate(projectData.startDate)}</span>
+                    <span><strong>Fin:</strong> ${formatDate(projectData.endDate)}</span>
+                </div>
+            `;
+
+            document.getElementById('ganttChart').innerHTML = ganttHTML;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('es-ES', options);
+        }
+
+        function printCharter() {
+            window.print();
+        }
+
+        function downloadCharter() {
+            alert('Para descargar como PDF, usa Ctrl+P (o Cmd+P en Mac) y selecciona "Guardar como PDF"');
+            window.print();
+        }
+
+        function resetSystem() {
+            if (confirm('¿Estás seguro de que deseas crear un nuevo proyecto? Se perderá toda la información actual.')) {
+                location.reload();
+            }
+        }
+
+        // Inicializar
+        window.onload = function() {
+            initializeSectors();
+        };
+    </script>
+</body>
+</html>
