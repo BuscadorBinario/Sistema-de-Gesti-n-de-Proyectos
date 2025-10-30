@@ -647,17 +647,9 @@
             'Educación',
             'Transportes y Comunicaciones',
             'Agricultura',
-            'Economía y Finanzas',
-            'Interior',
-            'Justicia',
-            'Defensa',
-            'Vivienda y Construcción',
-            'Energía y Minas',
-            'Trabajo y Promoción del Empleo',
             'Desarrollo e Inclusión Social',
-            'Ambiente',
-            'Cultura',
-            'Comercio Exterior y Turismo'
+            'Vivienda y Construcción',
+            'Ambiente'
         ];
 
         const proyectosTemplate = {
@@ -782,7 +774,6 @@
             }
         };
 
-        // Inicializar sectores
         function initializeSectors() {
             const grid = document.getElementById('sectorGrid');
             sectores.forEach(sector => {
@@ -817,7 +808,7 @@
                 document.getElementById('sectorCard').classList.add('hidden');
                 document.getElementById('formCard').classList.remove('hidden');
                 document.getElementById('resultsCard').classList.add('hidden');
-                addTask(); // Agregar una tarea inicial
+                addTask();
             }
         }
 
@@ -833,24 +824,20 @@
                 return;
             }
 
-            // Mostrar loading
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'loading';
             loadingDiv.textContent = 'Generando proyecto automático';
             document.getElementById('sectorCard').appendChild(loadingDiv);
 
-            // Simular proceso de generación
             setTimeout(() => {
-                // Calcular fechas
                 const today = new Date();
                 const startDate = new Date(today);
-                startDate.setDate(startDate.getDate() + 30); // Inicio en 30 días
+                startDate.setDate(startDate.getDate() + 30);
                 
                 let totalDias = template.tareas.reduce((sum, t) => sum + t.dias, 0);
                 const endDate = new Date(startDate);
                 endDate.setDate(endDate.getDate() + totalDias);
 
-                // Llenar todos los campos
                 document.getElementById('projectName').value = template.nombre;
                 document.getElementById('projectCode').value = `${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}-${selectedSector.substring(0, 4).toUpperCase()}`;
                 document.getElementById('executingUnit').value = `Ministerio de ${selectedSector}`;
@@ -869,12 +856,10 @@
                 document.getElementById('region').value = generarRegion();
                 document.getElementById('stakeholders').value = generarStakeholders(selectedSector);
 
-                // Limpiar tareas existentes
                 document.getElementById('tasksContainer').innerHTML = '';
                 tasks = [];
                 taskCounter = 0;
 
-                // Agregar tareas del template
                 let currentDate = new Date(startDate);
                 template.tareas.forEach(tarea => {
                     const taskStartDate = new Date(currentDate);
@@ -887,15 +872,12 @@
                     currentDate.setDate(currentDate.getDate() + 1);
                 });
 
-                // Remover loading y cambiar a vista de formulario
                 loadingDiv.remove();
                 document.getElementById('sectorCard').classList.add('hidden');
                 document.getElementById('formCard').classList.remove('hidden');
                 
-                // Scroll suave al formulario
                 document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
                 
-                // Generar automáticamente el acta
                 setTimeout(() => {
                     generateCharter();
                 }, 1000);
@@ -1241,7 +1223,6 @@
             }
         }
 
-        // Inicializar
         window.onload = function() {
             initializeSectors();
         };
